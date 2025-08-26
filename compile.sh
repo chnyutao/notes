@@ -9,5 +9,5 @@ find "$SRC_DIR" -type f -name "*.typ" | while read -r source; do
     filename="${source#$SRC_DIR/}"
     target="$DEST_DIR/${filename%.typ}.pdf"
     mkdir -p "$(dirname "$target")"
-    typst compile "$source" "$target"
+    typst compile --root $SRC_DIR "$source" "$target"
 done
