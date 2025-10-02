@@ -1,8 +1,10 @@
 #import "/preamble.typ": *
 
-#show: template.with()
-
-= Importance Sampling
+#show: template.with(
+  title: [Importance Sampling],
+  created: datetime(year: 2025, month: 8, day: 26),
+  updated: datetime(year: 2025, month: 10, day: 1),
+)
 
 Say we are interested in evaluating the following expectation:
 $ EE_p(xx) [f(xx)] = integral p(xx)f(xx) d xx. $
