@@ -6,6 +6,8 @@
   updated: datetime(year: 2025, month: 10, day: 1),
 )
 
+#let xx = $bold(x)$
+
 Say we are interested in evaluating the following expectation:
 $ EE_p(xx) [f(xx)] = integral p(xx)f(xx) d xx. $
 A naive Monte Carlo approximation
