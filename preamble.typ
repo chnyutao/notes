@@ -1,5 +1,13 @@
 #import "@preview/showybox:2.0.4": showybox
 
+// =========
+// FUNCTIONS
+// =========
+#let references() = {
+  show bibliography: set heading(outlined: false)
+  bibliography("references.bib", style: "apa", title: smallcaps[References])
+}
+
 // ========
 // TEMPLATE
 // ========
@@ -10,15 +18,18 @@
   updated: datetime.today(),
   body,
 ) = {
-  set page(paper: "iso-b5")
+  set page(paper: "a5")
   set par(justify: true)
 
-  // heading
+  show cite: set text(fill: gray.darken(50%))
+  show cite.where(supplement: [prose]): it => cite(it.key, form: "prose")
+
+  // HEADING
   grid(
     columns: (1fr, auto),
     align: (left, left + bottom),
     [
-      #heading(title, level: 1)
+      #heading(level: 1, outlined: false, title)
       #author
     ],
     text(fill: gray.darken(50%), size: 0.8em)[
@@ -28,7 +39,7 @@
     ],
   )
 
-  // contents
+  // CONTENTS
   showybox(
     frame: (
       title-color: black.lighten(80%),
@@ -42,16 +53,8 @@
       sep-thickness: 0pt,
     ),
     title: [Contents],
-    {
-      show outline: set text(size: 0.8em)
-      outline(target: heading.where(level: 2), title: none, indent: 0%)
-    },
+    outline(title: none, indent: n => (n - 1) * 1em),
   )
 
   body
 }
-
-// =======
-// SYMBOLS
-// =======
-#let xx = $bold(x)$
