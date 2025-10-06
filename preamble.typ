@@ -1,11 +1,19 @@
-#import "@preview/showybox:2.0.4": showybox
-
 // =========
 // FUNCTIONS
 // =========
+#let dim(body) = text(fill: gray.darken(25%), size: 0.8em, body)
 #let references() = {
   show bibliography: set heading(outlined: false)
   bibliography("references.bib", style: "apa", title: smallcaps[References])
+}
+#let fancybox(body, body-styles: (:), title: none, title-styles: (:)) = {
+  let defaults = (
+    inset: (x: 1em, y: 0.65em),
+    stroke: (left: 1pt + black),
+    width: 100%,
+  )
+  if title != none { block(..defaults, ..(sticky: true), ..title-styles, title) }
+  if body != none { block(..defaults, ..(above: 0pt), ..body-styles, body) }
 }
 
 // ========
@@ -40,20 +48,11 @@
   )
 
   // CONTENTS
-  showybox(
-    frame: (
-      title-color: black.lighten(80%),
-      body-color: gray.lighten(80%),
-      radius: 0pt,
-      thickness: (left: 1pt),
-    ),
-    title-style: (
-      color: black,
-      weight: "bold",
-      sep-thickness: 0pt,
-    ),
-    title: [Contents],
-    outline(title: none, indent: n => (n - 1) * 1em),
+  fancybox(
+    outline(indent: n => (n - 1) * 1em, title: none),
+    body-styles: (fill: gray.lighten(80%)),
+    title: [*Contents*],
+    title-styles: (fill: black.lighten(80%)),
   )
 
   body
