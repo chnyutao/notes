@@ -2,18 +2,19 @@
 // FUNCTIONS
 // =========
 #let dim(body) = text(fill: gray.darken(25%), size: 0.8em, body)
-#let references() = {
-  show bibliography: set heading(outlined: false)
-  bibliography("references.bib", style: "apa", title: smallcaps[References])
-}
 #let fancybox(body, body-styles: (:), title: none, title-styles: (:)) = {
   let defaults = (
     inset: (x: 1em, y: 0.65em),
     stroke: (left: 1pt + black),
     width: 100%,
   )
-  if title != none { block(..defaults, ..(sticky: true), ..title-styles, title) }
-  if body != none { block(..defaults, ..(above: 0pt), ..body-styles, body) }
+  if title != none { block(..defaults, ..(below: 0pt, sticky: true), ..title-styles, title) }
+  if body != none { block(..defaults, ..body-styles, body) }
+}
+#let quote(body) = fancybox(body, body-styles: (fill: gray.lighten(80%)))
+#let references() = {
+  show bibliography: set heading(outlined: false)
+  bibliography("references.bib", style: "apa", title: smallcaps[References])
 }
 
 // ========
@@ -31,6 +32,7 @@
 
   show cite: set text(fill: gray.darken(50%))
   show cite.where(supplement: [prose]): it => cite(it.key, form: "prose")
+  show math.equation: set block(breakable: true)
 
   // HEADING
   grid(
