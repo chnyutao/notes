@@ -3,7 +3,7 @@
 #show: template.with(
   title: [Expectation Maximization],
   created: datetime(year: 2025, month: 10, day: 6),
-  updated: datetime(year: 2025, month: 10, day: 6),
+  updated: datetime(year: 2025, month: 10, day: 8),
 )
 
 
@@ -12,36 +12,38 @@
 #let xx = $bold(x)$
 #let zz = $bold(z)$
 
-*Expectation maximization* (EM) @dempster1977maximum is designed for _maximum likelihood_ parameter estimation for probabilistic models with _missing data_ or _hidden variables_.
+*Expectation maximization* (EM) @dempster1977maximum is designed for _maximum likelihood_ estimation of parameters in probabilistic models with _missing data_ or _hidden variables_.
 
 Let ${xx_n}$ denote the set of observed data, and ${zz_n}$ the set of hidden data. We want to maximize the likelihood w.r.t. the observed data:
 $
     & limits(arg max)_theta sum_(xx_n) log p(xx_n|theta) \
   = & limits(arg max)_theta sum_(xx_n) log (integral p(xx_n,zz_n|theta) dif zz_n),
 $
-where $log p(xx|theta)$ is known as the _incomplete-data_ log likelihood, and $log p(xx,zz|theta)$ as the _complete-data_ log likelihood.
+where $p(xx|theta)$ is known as the _incomplete-data_ likelihood, and $p(xx,zz|theta)$ is known as the _complete-data_ likelihood.
 
 == Evidence Lower Bound
 
-Unfortunately, this optimization is generally intractable due to the log-integral $log integral p(xx,zz|theta) dif zz$.
-
+Unfortunately, this maximization is generally intractable, because of the $log integral p(xx,zz|theta) dif zz$ term.
 
 We can bypass the intractability by transforming $log p(xx|theta)$ as follows:
 $
   log p(xx|theta)
   & = EE_(q(zz))[log p(xx|theta)] \
-  & = EE_(q(zz))[log p(xx,zz|theta) \/ p(zz|xx,theta)] \
+  & = EE_(q(zz))[log (p(xx,zz|theta) \/ p(zz|xx,theta))] \
   & = underbrace(EE_(q(zz))[log p(xx,zz|theta) / q(z)], cal(F)(q(zz), theta)) + KL(q(zz) || p(zz|xx,theta)),
 $
 where $cal(F)(q(zz), theta)$ is known as the _evidence lower bound_ (ELBO). We have
 $ cal(F)(q(zz), theta) <= log p(xx|theta) $
 for any $q(zz)$ and $theta$, with equality holding iff $q(zz)=p(zz|xx,theta)$.
 
-The EM algorithm maximizes $log p(xx|theta)$ by instead iteratively maximizing the lower bound $cal(F)(q(zz), theta)$. For each iteration $t$, we perform _coordinate ascent_ on $cal(F)(q(zz),theta)$ alternating between $q(zz)$ and $theta$.
+The #highlight[EM algorithm] then maximizes $log p(xx|theta)$ by instead maximizing the lower bound $cal(F)(q(zz), theta)$ iteratively. For each iteration $t$, we perform _coordinate ascent_ on $cal(F)(q(zz),theta)$ alternating between $q(zz)$ and $theta$.
 - In the *E-step*, we maximize $cal(F)(q(zz), theta)$ with $theta=theta_t$ fixed:
   $ q_t (zz) = limits(arg max)_(q(zz)) space cal(F)(q(zz), theta_t) = p(zz|xx,theta_t). $
 - In the *M-step*, we maximize $cal(F)(q(zz), theta)$ with $q(zz)=q_t (zz)$ fixed: #h(1fr)
-  $ theta_(t+1) = limits(arg max)_theta space cal(F)(q_t (zz), theta). $
+  $
+    theta_(t+1) & = limits(arg max)_theta space cal(F)(q_t (zz), theta) \
+                & = limits(arg max)_theta space EE_(q_t (zz))[log p(xx,zz|theta)].
+  $
 
 This iterative process guarantees monotonic improvement of $log p(xx|theta)$ until convergence to some _local_ maxima, because for each iteration $t$
 $
@@ -80,5 +82,8 @@ $ theta_(t+1) = theta_t + eta nabla_theta cal(F)(q_t (zz), theta_t). $
 #quote[
   The varational auto-encoders (VAEs) @kingma2013auto can be interpreted as an instance of variational stochastic gradient EM.
 ]
+
+However, EM becomes less appealling when there is no close form for the M-step, as one might just as well directly optimizing $log p(xx|theta)$ using gradient-based methods.
+
 
 #references()
