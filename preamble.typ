@@ -16,6 +16,11 @@
   show bibliography: set heading(outlined: false)
   bibliography("references.bib", style: "apa", title: smallcaps[References])
 }
+#let wikilink(dest, body) = {
+  show link: underline
+  show link: set text(fill: cmyk(100%, 100%, 0%, 0%))
+  [\[\[#link("https://chnyutao.github.io/notes/" + dest + ".pdf", body)\]\]]
+}
 
 // ========
 // TEMPLATE
@@ -30,7 +35,7 @@
   set page(paper: "a5")
   set par(justify: true)
 
-  show cite: set text(fill: gray.darken(50%))
+  show cite: set text(fill: cmyk(100%, 100%, 0%, 0%))
   show cite.where(supplement: [prose]): it => cite(it.key, form: "prose")
   show math.equation: set block(breakable: true)
 
@@ -42,7 +47,7 @@
       #heading(level: 1, outlined: false, title)
       #author
     ],
-    text(fill: gray.darken(50%), size: 0.8em)[
+    dim[
       #let format = "[month repr:short] [day] [year]"
       $hourglass.stroked$ #created.display(format) \
       $hourglass.filled$ #updated.display(format)
