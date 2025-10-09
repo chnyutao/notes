@@ -48,6 +48,6 @@ where the _Riemannian metric tensor_ $G(theta) in RR^(d times d)$ is a symmetric
 
 @amari1998natural[prose] showed that the steepest descent on a Riemannian manifold is given by
 $ theta_(t+1) = theta_t - eta G^(-1)(theta_t)nabla J(theta_t). $
-Particularly when $G(theta)$ is the Fisher information matrix (FIM), this is known as the #wikilink("optimization/natural-gradient-descent")[Natural Gradient Descent].
+Particularly when $G(theta)$ is the Fisher information matrix (FIM), this is known as the #wikilink("/optimization/natural-gradient-descent.typ").
 
 #references()
