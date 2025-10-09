@@ -6,7 +6,6 @@
   updated: datetime(year: 2025, month: 10, day: 8),
 )
 
-
 #let KL = $DD_"KL"$
 #let theta = $bold(theta)$
 #let xx = $bold(x)$
@@ -72,7 +71,7 @@ This approach, unfortunately, does not guarantee monotonic improvement of $log p
 
 === Stochastic Gradient EM
 
-Another basic assumption we have made in EM is that we can compute $theta_(t+1) = limits(arg max)_theta space cal(F)(q_t (zz),theta)$ in the M-step.
+Another basic assumption we have made in EM is that we can compute $theta_(t+1) = arg max_theta cal(F)(q_t (zz),theta)$ in the M-step.
 
 For many practical problems, however, such maximization is not easy. Fortunately, note that in the M-step, as long as we can find some $theta_(t+1)$ that guarantees
 $ cal(F)(q_t (zz), theta_t) <= cal(F)(q_t (zz), theta_(t+1)), $
@@ -84,6 +83,5 @@ $ theta_(t+1) = theta_t + eta nabla_theta cal(F)(q_t (zz), theta_t). $
 ]
 
 However, EM becomes less appealling when there is no close form for the M-step, as one might just as well directly optimizing $log p(xx|theta)$ using gradient-based methods.
-
 
 #references()
