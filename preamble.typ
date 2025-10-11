@@ -3,12 +3,15 @@
 // =========
 #let palette = (
   bg: (
+    aqua: cmyk(1%, 1%, 0%, 0%),
+    azure: cmyk(10%, 5%, 0%, 0%),
     dark: black.lighten(80%),
     light: gray.lighten(80%),
   ),
   blue: cmyk(100%, 100%, 0%, 0%),
   fg: (dim: gray.darken(20%)),
 )
+#let counters = (def: counter(figure.where(kind: "def")))
 
 // =========
 // FUNCTIONS
@@ -22,6 +25,16 @@
   if title != none { block(..defaults, ..(below: 0pt, sticky: true), ..title-styles, title) }
   if body != none { block(..defaults, ..body-styles, body) }
 }
+#let definition(body, label: none, title: none) = fancybox(
+  body,
+  body-styles: (fill: palette.bg.aqua, stroke: (left: palette.blue)),
+  title: [
+    // dummy label for counting + referencing
+    #place[#figure(kind: "def", supplement: [Definition])[] #label]
+    *Definition* #context counters.def.display() (#title)
+  ],
+  title-styles: (fill: palette.bg.azure, stroke: (left: palette.blue)),
+)
 #let quote(body) = fancybox(body, body-styles: (fill: palette.bg.light))
 #let references() = {
   show bibliography: set heading(outlined: false)
@@ -56,7 +69,7 @@
   show cite.where(supplement: [prose]): it => cite(it.key, form: "prose")
   show math.equation: set block(breakable: true)
 
-  // HEADING
+  // heading
   grid(
     columns: (1fr, auto),
     align: (left, left + bottom),
@@ -71,7 +84,7 @@
     ],
   )
 
-  // CONTENTS
+  // contents
   fancybox(
     outline(indent: n => (n - 1) * 1em, title: none),
     body-styles: (fill: palette.bg.light),
