@@ -3,7 +3,7 @@
 #show: template.with(
   title: [Expectation Maximization],
   created: datetime(year: 2025, month: 10, day: 6),
-  updated: datetime(year: 2025, month: 10, day: 8),
+  updated: datetime(year: 2025, month: 10, day: 11),
 )
 
 #let KL = $DD_"KL"$
@@ -82,6 +82,7 @@ $ theta_(t+1) = theta_t + eta nabla_theta cal(F)(q_t (zz), theta_t). $
   The varational auto-encoders (VAEs) @kingma2013auto can be interpreted as an instance of variational stochastic gradient EM.
 ]
 
-However, EM becomes less appealling when there is no close form for the M-step, as one might just as well directly optimizing $log p(xx|theta)$ using gradient-based methods.
+However, EM becomes less appealling when there is no close form for the M-step, as one might just as well directly optimize $log p(xx|theta)$ using gradient-based methods. Particularly, one can show that
+$ nabla_theta log p(xx|theta_t) = nabla_theta cal(F)(q_t (zz), theta_t). $
 
 #references()
