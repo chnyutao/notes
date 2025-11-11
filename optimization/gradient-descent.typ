@@ -14,7 +14,7 @@ Gradient descent tells us to update $theta$ in the direction of the negative gra
 $ theta_(t+1) = theta_t - eta nabla J(theta_t), $
 where $eta$ is commonly known as the _learning rate_.
 
-== Lagrangian Method
+== Proximal Method
 
 Directly minimizing the black-box objective $J(theta)$ is intractable in general. We instead consider a linear approximation of $J(theta)$ around $theta_t$ using the first-order Taylor expansion:
 $ J(theta) approx J(theta_t) + nabla J(theta_t)^top (theta - theta_t). $
