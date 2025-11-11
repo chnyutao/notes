@@ -11,12 +11,12 @@
 #let xx = $bold(x)$
 #let zz = $bold(z)$
 
-*Expectation maximization* (EM) @dempster1977maximum is designed for _maximum likelihood_ estimation of parameters in probabilistic models with _missing data_ or _hidden variables_.
+*Expectation maximization* (EM) @dempster1977maximum is designed for _maximum likelihood_ estimation of parametrized probabilistic models with missing or hidden data.
 
-Let ${xx_n}$ denote the set of observed data, and ${zz_n}$ the set of hidden data. We want to maximize the likelihood w.r.t. the observed data:
+Let ${xx_n}$ denote the set of observed data, and ${zz_n}$ the set of missing data. We want to maximize the likelihood w.r.t. the observed data:
 $
     & limits(arg max)_theta sum_(xx_n) log p(xx_n|theta) \
-  = & limits(arg max)_theta sum_(xx_n) log (integral p(xx_n,zz_n|theta) dif zz_n),
+  = & limits(arg max)_theta sum_(xx_n) log integral p(xx_n,zz_n|theta) dif zz_n,
 $
 where $p(xx|theta)$ is known as the _incomplete-data_ likelihood, and $p(xx,zz|theta)$ is known as the _complete-data_ likelihood.
 
@@ -64,8 +64,8 @@ $
 One of the basic assumption we have made in EM is that we can easily evaluate $q_t (zz)=p(zz|xx,theta_t)$ in the E-step.
 
 However, evaluating the posterior $p(zz|xx,theta_t)$ itself could be intractable, especially if $zz$ is a continuous r.v. We can instead use _variational inference_ (VI) to pick $q_t$ such that
-$ q_t (zz) = limits(arg max)_(q in cal(Q)) space KL(q(zz) || p(zz|xx,theta)), $
-where $Q$ is the variational family. Intuitively, we pick a distribution $q_t (zz) in cal(Q)$ that can best approximate the exact posterior $p(zz|xx,theta)$.
+$ q_t (zz) = limits(arg max)_(q in cal(Q)) space KL(q(zz) || p(zz|xx,theta_t)), $
+where $Q$ is the variational family. Intuitively, we pick a distribution $q_t (zz) in cal(Q)$ that can best approximate the exact posterior $p(zz|xx,theta_t)$.
 
 This approach, unfortunately, does not guarantee monotonic improvement of $log p(xx|theta)$ due to approximation errors. Only when the variational family $Q$ is sufficiently versatile such that $p(zz|xx,theta) in cal(Q)$ can we (in theory) recover the behaviors of regular EM.
 
