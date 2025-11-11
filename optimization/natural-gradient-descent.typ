@@ -71,7 +71,7 @@ A major drawback of NGD is that computing and inverting the FIM is expensive. Th
 Recall that FIM can be defined as the variance of the score function
 $ F(theta) = EE_(p(x|theta))[(nabla_theta log p(x|theta)) (nabla_theta log p(x|theta))^top]. $
 
-_Empirical Fisher_ proposes to approximate FIM by replacing $p(x|theta)$ with the empirical distribution $p_(cal(D))(x)$, where $cal(D)$ is a dataset:
+_Empirical Fisher_ approximates FIM by evaluating the expectation w.r.t. an empirical distribution $p_(cal(D))(x)$, where $cal(D)$ is a dataset:
 $ F(theta) approx 1 / (|cal(D)|) sum_(x in cal(D)) (nabla_theta log p(x|theta)) (nabla_theta log p(x|theta))^top. $
 
 === Exponential Family Distributions
