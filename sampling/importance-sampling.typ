@@ -3,28 +3,26 @@
 #show: template.with(
   title: [Importance Sampling],
   created: datetime(year: 2025, month: 8, day: 26),
-  updated: datetime(year: 2025, month: 10, day: 1),
+  updated: datetime(year: 2026, month: 3, day: 23),
 )
 
-#let xx = $bold(x)$
-
-Say we are interested in evaluating the following expectation:
-$ EE_p(xx) [f(xx)] = integral p(xx)f(xx) d xx. $
+In this document, we describe a Monte Carlo method known as *importance sampling* for approximating expectations of the following form:
+$ EE_p(x) [f(x)] = integral p(x)f(x) dif x. $
 A naive Monte Carlo approximation
-$ EE_p(xx) [f(xx)] approx 1/N sum_(n=1)^N p(xx_n)f(xx_n) $
-typically requires sampling $xx_1,dots,xx_n$ from the _target distribution_ $p(xx)$.
+$ EE_p(x) [f(x)] approx 1/N sum_(n=1)^N p(x_n)f(x_n) $
+typically requires sampling $x_1,dots,x_n$ from the _target distribution_ $p(x)$.
 
 == Direct Importance Sampling
 
-However, it is generally difficult to sample from arbitrary $p(xx)$. Instead we resort to some _proposal distribution_ $q(xx)$:
+It is generally difficult to sample from an arbitrary target $p(x)$. Instead, we resort to some _proposal distribution_ $q(x)$:
 $
-  EE_p(xx) [f(xx)] & = integral p(xx)f(xx) d xx \
-                   & = integral q(xx)p(xx)/q(xx)f(xx) d xx \
-                   & approx 1/N sum_(n=1)^N w_n f(xx_n),
+  EE_p(x) [f(x)] & = integral p(x)f(x) dif x \
+                 & = integral q(x)p(x)/q(x)f(x) dif x \
+                 & approx 1/N sum_(n=1)^N w_n f(x_n),
 $
-where $w_n = p(xx_n) \/ q(xx_n)$ is the _importance weight_ and $xx_n ~ q(xx)$.
+where $x_n ~ q(x)$ and $w_n = p(x_n) \/ q(x_n)$ is the _importance weight_.
 
-In this way, we bypass sampling from $p(xx)$ by instead sampling from the proposal distribution $q(xx)$. However, we still need to evaluate the densities $p(xx)$ or $q(xx)$.
+In this way, we replace sampling from an intractable target $p(x)$ with a tractable proposal $q(x)$. However, we still need to compute the densities $p(x)$ or $q(x)$ for $x ~ q(x)$.
 
 == Self-Normalized Importance Sampling
 
@@ -32,23 +30,23 @@ In this way, we bypass sampling from $p(xx)$ by instead sampling from the propos
 #let tq = $tilde(q)$
 #let tw = $tilde(w)$
 
-In some cases, even evaluating the densities $p(xx)$ or $q(xx)$ is difficult. In this case, we instead consider the unnormalized densities $tp(xx)$ and $tq(xx)$ such that
+In some cases, even the densities $p(x)$ and $q(x)$ can only be evaluated up to some _unknown_ normalizing constant. We consider the unnormalized densities $tp(x)$ and $tq(x)$ such that
 $
-  p(xx) & =tp(xx) \/ Z_p, \
-  q(xx) & =tq(xx) \/ Z_q,
+  p(x) & =tp(x) \/ Z_p, \
+  q(x) & =tq(x) \/ Z_q,
 $
-where $Z_p=integral tp(xx) d xx$ and $Z_q=integral tq(xx) d xx$. We now have
+where $Z_p=integral tp(x) dif x$ and $Z_q=integral tq(x) dif x$ are constants. We now have
 $
-  EE_p(xx) [f(xx)] & = integral p(xx)f(xx) d xx \
-                   & = Z_q/Z_p integral q(xx) (tp(xx)) / (tq(xx)) f(xx) d xx \
-                   & approx Z_q/Z_p 1/N sum_(n=1)^N w_n f(xx_n),
+  EE_p(x) [f(x)] & = integral p(x)f(x) dif x \
+                 & = Z_q/Z_p integral q(x) (tp(x)) / (tq(x)) f(x) dif x \
+                 & approx Z_q/Z_p 1/N sum_(n=1)^N w_n f(x_n),
 $
-where $w_n = tp(xx_n) \/ tq(xx_n)$. Similarly, we can derive that
+where $w_n = tp(x_n) \/ tq(x_n)$. Similarly, we can derive that
 $
-  Z_p/Z_q = integral q(xx) (tp(xx)) / (tq(xx)) d xx approx 1/N sum_(n=1)^N w_n.
+  Z_p/Z_q = integral q(x) (tp(x)) / (tq(x)) dif x approx 1/N sum_(n=1)^N w_n.
 $
-Putting everything together, we have the following simplified form of self-normalized importance sampling:
+Putting everything together, we now have the following approximation:
 $
-  EE_p(x)[f(x)] approx sum_(n=1)^N tw_n f(xx_n),
+  EE_p(x)[f(x)] approx sum_(n=1)^N tw_n f(x_n),
 $
-where $tw_n = w_n \/ (sum_(m=1)^N w_m)$ is the _self-normalized importance weight_.
+where $tw_n = w_n \/ sum_(m=1)^N w_m$ is the _self-normalized_ importance weight.
