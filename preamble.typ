@@ -35,6 +35,10 @@
   ],
   title-styles: (fill: palette.bg.azure, stroke: (left: palette.blue)),
 )
+#let proof(body) = block[#text(size: 0.8em)[
+  _Proof_. $space$ #body
+  #place(bottom + right, square(fill: palette.bg.azure, size: 0.8em))
+]]
 #let quote(body) = fancybox(body, body-styles: (fill: palette.bg.light))
 #let references() = {
   show bibliography: set heading(outlined: false)
