@@ -28,7 +28,7 @@ Normalizing flows (NFs) are a class of generative models that gradually transfor
 The essence of normalizing flows is to build a parametrized invertible mapping $f_theta: RR^d arrow RR^d$ by composing a sequence of $K$ simpler learnable invertible mappings ${f_k}_(k=0)^(K-1)$ such that
 $ f_theta = f_(K-1) space circle.small space dots.c space f_1 space circle.small space f_0. $
 
-Specifically, starting from a prior noise distribution $p_0(x_0)$ #footnote[Typically, we use a standard Gaussian $p_0(x_0) = cal(N)(0, I)$ as the prior distribution.], we gradually tranform a sampled noise $x_0 ~ p_0$ such that
+Specifically, starting from a prior noise distribution #footnote[Typically, we use a standard Gaussian $p_0(x_0) = cal(N)(0, I)$ as the prior distribution.] $p_0(x_0)$, we gradually tranform a sampled noise $x_0 ~ p_0$ such that
 $ x_(k+1) = f_k (x_k), "where" k in {0, dots, K-1}, $
 and consequently
 $ x_K = f_(k-1) (x_(k-1)) = (f_(K-1) space circle.small space dots.c space f_1 space circle.small space f_0) (x_0). $
@@ -40,14 +40,17 @@ $ log p_K (x_K; theta) = log p_0 (x_0) - sum_(k=0)^K log lr(| (partial f_k) / (p
 where $x_0 = (f_0^(-1) space circle.small space f_1^(-1) space dots.c space circle.small space f_(K-1)^(-1)) (x_K)$.
 
 Learning normalizing flows essentially amouts to maximizing the log-likelihood of $p_K (dot; theta)$ w.r.t. an empirical data distribution $p_"data" (x)$
-$ theta^* = limits(arg max)_theta EE_(x ~ p_"data" (x)) [log p_K (x;theta)] $
+$
+  theta^* & = limits(arg max)_theta space EE_(x ~ p_"data" (x)) [log p_K (x;theta)] \
+          & = limits(arg min)_theta space DD_"KL" (p_"data" (x) || p_K (x;theta))
+$
 
 == Examples
 
 The major challenge of normalizing flows is to design learnable mappings $f_k$ that is _(a)_ suffciently expressive, _(b)_ invertible, and _(c)_ has efficiently computable Jacobians $partial f_k \/ partial x_k$.
 
 #quote[
-  As an example, a linear mapping $f(x) = A x + b$ easily satisfies _(b)_ and _(c)_, but is not suffciently expressive for modeling distributions over high-dimensional data.
+  For example, a linear mapping $f(x) = A x + b$ can easily satisfy _(b)_ and _(c)_, but is not suffciently expressive.
 ]
 
 Often times, we parametrize such learnable mappings $f_k$ using purposefully designed neural networks that are non-linear (expressive), yet invertible and has easily computable Jacobians. Here we provide a few (opinionated) pointers to recent works:
