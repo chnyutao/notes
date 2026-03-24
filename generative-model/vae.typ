@@ -80,10 +80,10 @@ $
   & "ELBO"(q_phi.alt (z_(1:T)|x)) \
   = & EE_(q_phi.alt) [log p_theta (x,z_(1:T)) - log q_phi.alt (z_(1:T)|x)] \
   = & EE_(q_phi.alt) [log (p_theta (x|z_T) product_(t=1)^(T-1) p_theta (z_(t+1)|z_t) p(z_1)) / (q_phi.alt (z_T|x) product_(t=1)^(T-1) q_phi.alt (z_t|z_(t+1)))] \
-  = & EE_(q_phi.alt) [log p_theta (x|z_T)] - & note("reconstruction") \
+  = & EE_(q_phi.alt) [log p_theta (x|z_T)] - & #dim[(reconstruction)] \
   & EE_(q_phi.alt) [DD_"KL" (q_phi.alt (z_T|x) || p_theta (z_T|z_(T-1)))] - \
-  & sum_(t=2)^(T-1) EE_(q_phi.alt) [DD_"KL" (q_phi.alt (z_t|z_(t+1)) || p_theta (z_t|z_(t-1)))] - & note("consistency") \
-  & EE_(q_phi.alt) [DD_"KL" (q_phi.alt (z_1|z_2) || p(z_1))]. & note("prior matching")
+  & sum_(t=2)^(T-1) EE_(q_phi.alt) [DD_"KL" (q_phi.alt (z_t|z_(t+1)) || p_theta (z_t|z_(t-1)))] - & #dim[(consistency)] \
+  & EE_(q_phi.alt) [DD_"KL" (q_phi.alt (z_1|z_2) || p(z_1))]. & #dim[(prior matching)]
 $
 
 While this particular bound appears intimidating, we shall later reveal surprising and yet elegant connections between hierarchical VAE and denoising diffusion probabilistic models (DDPM) @ho2020denoising.
