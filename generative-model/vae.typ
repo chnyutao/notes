@@ -6,7 +6,7 @@
   updated: datetime(year: 2026, month: 3, day: 23),
 )
 
-The variational auto-encoders (VAE) @kingma2013auto is:
+The variational auto-encoder (VAE) @kingma2013auto is:
 1. a *generative model* that learns a parametrized distribution $p_theta (x)$ to match an empirical data distribution $p_"data" (x)$, and
 2. a *latent variable model* that explains observed data $x ~ p_"data" (x)$ by introducing latent variables $z ~ p_"prior" (z)$.
 
@@ -34,7 +34,7 @@ $
                & = EE_(q(z)) [log p_theta (x|z)] + DD_"KL" (q(z) || p_"prior" (z)),
 $
 where $q(z) in cal(Q)$ is a variational distribution from a variational family $cal(Q)$, and $"ELBO"(q(z)) <= log p_theta (x)$ with equality iff $q(z)$ perfectly matches the posterior $p_theta (z|x)$:
-$ q(z) = p_theta (z|x) = underbrace(p_theta (x|z) dot p_"prior" (z) \/ p_"data" (x), "Bayes rule"). $
+$ q(z) = p_theta (z|x) prop p_theta (x|z) dot p_"prior" (z). $
 
 Variational auto-encoders are typically parametrized using the encoder and decoder neural networks:
 - *Encoder* $q_phi.alt (z|x) = q(z)$, also known as the _inference network_, maps observed data $x$ to (a distribution over) latent variables $z$.
@@ -45,7 +45,7 @@ $
   phi.alt^*, theta^* = limits(arg max)_(phi.alt, theta) space EE_(q_phi.alt (z|x)) [log p_theta (x|z)] + DD_"KL" (q_phi.alt (z|x) || p_"prior" (z))
 $
 
-== Case Studies
+== Examples
 
 === Gaussian VAE
 
@@ -74,7 +74,7 @@ $ p_theta (x,z_(1:T)) = p_theta (x|z_T) product_(t=1)^(T-1) p_theta (z_(t+1)|z_t
 and an encoder $q_phi.alt (z_(1:T)|x)$ with the same Markovian hierarchy
 $ q_phi.alt (z_(1:T)|x) = q_phi.alt (z_T|x) product_(t=1)^(T-1) q_phi.alt (z_t|z_(t+1)). $
 
-#let note(x) = text(fill: gray, size: 0.7em, [(#x)])
+#let note(x) = text(fill: palette.fg.dim, size: 0.7em, weight: "medium", [(#x)])
 The evidence lower bound of a hierarchical VAE can then be written as
 $
   & "ELBO"(q_phi.alt (z_(1:T)|x)) \
