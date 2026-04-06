@@ -3,46 +3,46 @@
 #show: template.with(
   title: [Normalizing Flow],
   created: datetime(year: 2026, month: 3, day: 24),
-  updated: datetime(year: 2026, month: 3, day: 24),
+  updated: datetime(year: 2026, month: 4, day: 6),
 )
 
-Normalizing flows (NFs) are a class of generative models that gradually transform noise into data through an _invertible_ mapping, following the *change-of-variables formula* of probability densities.
+*Normalizing flows* (NFs) are generative models that gradually transform noise into data using an _invertible_ mapping, following the _change-of-variables formula_ for probability densities.
 #definition(title: [Change-of-Variables Formula])[
   For $x ~ p_x (x)$, given a smooth invertible mapping $f: RR^d arrow RR^d$ such that $y = f(x)$, the probability density $p_y (y)$ is
   $
     p_y (y)
-    = p_x (x) dot lr(| (partial f^(-1)) / (partial y) |)
-    = p_x (x) dot lr(| (partial f) / (partial x) |)^(-1),
+    = p_x (x) dot lr(| det (partial f^(-1)) / (partial y) |)
+    = p_x (x) dot lr(| det (partial f) / (partial x) |)^(-1),
   $
   where $f^(-1)$ denotes the inverse of $f$ such that $x = f^(-1)(y)$ #footnote[Note that $x = f^(-1)(f(x))$, and therefore $(partial f^(-1) \/ partial y) dot (partial f \/ partial x) = I$.].
 ]
 #proof[
-  Informally, using the change-of-variables rule in multivariate calculus, we can prove that for any $Omega subset RR^d$
+  Informally, using the change-of-variables rule in multivariate calculus, we can show that for any $Omega subset RR^d$
   $
-    integral_Omega p_y (y) dif y = integral_(f^(-1)(Omega)) p_x (x) dif x = integral_(f^(-1)(Omega)) p_x (x) lr(|(partial f^(-1)) / (partial y)|) dif y.
+    underbrace(integral_Omega p_y (y) dif y = integral_(f^(-1)(Omega)) p_x (x) dif x, "Pr"[y in f(Omega)] space = "Pr"[x in Omega]) = integral_Omega p_x (x) lr(|det (partial f^(-1)) / (partial y)|) dif y.
   $
 ]
 
 == Invertible Transformation
 
-The essence of normalizing flows is to build a parametrized invertible mapping $f_theta: RR^d arrow RR^d$ by composing a sequence of $K$ simpler learnable invertible mappings ${f_k}_(k=0)^(K-1)$ such that
+A normalizing flow essentially builds an invertible mapping $f_theta: RR^d arrow RR^d$ parametrized by $theta$ by composing a sequence of $K$ simpler learnable invertible mappings ${f_k: RR^d arrow RR^d}_(k=0)^(K-1)$ such that
 $ f_theta = f_(K-1) space circle.small space dots.c space f_1 space circle.small space f_0. $
 
-Specifically, starting from a prior noise distribution #footnote[Typically, we use a standard Gaussian $p_0(x_0) = cal(N)(0, I)$ as the prior distribution.] $p_0(x_0)$, we gradually tranform a sampled noise $x_0 ~ p_0$ such that
-$ x_(k+1) = f_k (x_k), "where" k in {0, dots, K-1}, $
-and consequently
-$ x_K = f_(k-1) (x_(k-1)) = (f_(K-1) space circle.small space dots.c space f_1 space circle.small space f_0) (x_0). $
+Specifically, starting from some noise distribution $p_0(x_0)$ #footnote[Typically a standard Gaussian $p_0(x_0) = cal(N)(0, I)$.], we push a sampled noise $x_0 ~ p_0$ through the sequence of mappings
+$ x_(k+1) = f_k (x_k), $
+for $k = 0, dots, K-1$. Consequently, we have
+$ x := x_K = (f_(K-1) space circle.small space dots.c space f_1 space circle.small space f_0) (x_0). $
 
-The probability density $p_K (x_K; theta)$ over $x_K$ is given by the change-of-variables formula as follows:
-$ p_K (x_K; theta) = p_0 (x_0) product_(k=0)^(K-1) lr(| (partial f_k) / (partial x_k) |)^(-1), $
+The resulting probability density $p_theta (x)$ is given by the change-of-variables formula as follows:
+$ p_theta (x) = p_0 (x_0) product_(k=0)^(K-1) lr(| det (partial f_k) / (partial x_k) |)^(-1), $
 or equivalently the log-density is
-$ log p_K (x_K; theta) = log p_0 (x_0) - sum_(k=0)^K log lr(| (partial f_k) / (partial x_k) |), $
+$ log p_theta (x) = log p_0 (x_0) - sum_(k=0)^K log lr(| det (partial f_k) / (partial x_k) |), $
 where $x_0 = (f_0^(-1) space circle.small space f_1^(-1) space dots.c space circle.small space f_(K-1)^(-1)) (x_K)$.
 
-Learning normalizing flows essentially amouts to maximizing the log-likelihood of $p_K (dot; theta)$ w.r.t. an empirical data distribution $p_"data" (x)$
+Learning normalizing flows essentially amouts to maximizing the log-likelihood of $p_theta (x)$ w.r.t. an empirical data distribution $p_"data" (x)$
 $
-  theta^* & = limits(arg max)_theta space EE_(x ~ p_"data" (x)) [log p_K (x;theta)] \
-          & = limits(arg min)_theta space DD_"KL" (p_"data" (x) || p_K (x;theta))
+  theta^* & = limits(arg max)_theta space EE_(x ~ p_"data" (x)) [log p_theta (x)] \
+          & = limits(arg min)_theta space DD_"KL" (p_"data" (x) || p_theta (x))
 $
 
 == Examples
@@ -53,10 +53,10 @@ The major challenge of normalizing flows is to design learnable mappings $f_k$ t
   For example, a linear mapping $f(x) = A x + b$ can easily satisfy _(b)_ and _(c)_, but is not suffciently expressive.
 ]
 
-Often times, we parametrize such learnable mappings $f_k$ using purposefully designed neural networks that are non-linear (expressive), yet invertible and has easily computable Jacobians. Here we provide a few (opinionated) pointers to recent works:
+Often times, we parametrize such learnable mappings $f_k$ using purposefully designed neural networks that are non-linear (hence expressive), yet invertible and has easily computable Jacobians. Here we provide a list of (opinionated) pointers to such recent works:
 - Planar and radial flows @rezende2015variational;
 - Coupling flows @dinh2017density
+- Residual flows @chen2019residual
 - Block neural autoregressive flows @cao2020block
-- Transformer autoregressive flows @zhai2025normalizing
 
 #references()
