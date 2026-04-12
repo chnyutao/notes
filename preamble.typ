@@ -64,6 +64,8 @@
   bibliography("references.bib", style: "apa", title: smallcaps[References])
 }
 
+#let rule(..args) = line(length: 100%, stroke: palette.bg.gray1, ..args)
+
 #let wikilink(dest, title: none) = {
   show link: underline
   show link: set text(fill: palette.fg.blue)
@@ -118,7 +120,7 @@
       title-styles: (fill: palette.bg.gray1),
     )
   } else {
-    line(length: 100%, stroke: palette.bg.gray1)
+    rule()
   }
 
   body
