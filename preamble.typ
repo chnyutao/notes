@@ -1,3 +1,5 @@
+#import "@preview/fletcher:0.5.8" as fletcher: edge, node
+
 // =========
 // VARIABLES
 // =========
@@ -81,6 +83,7 @@
   author: "Yutao Chen",
   created: datetime(year: 1970, month: 1, day: 1),
   updated: datetime.today(),
+  outlined: true,
   body,
 ) = {
   set document(author: author, date: created, title: title)
@@ -107,12 +110,16 @@
   )
 
   // contents
-  fancybox(
-    outline(indent: n => (n - 1) * 1em, title: none),
-    body-styles: (fill: palette.bg.gray0),
-    title: [*Contents*],
-    title-styles: (fill: palette.bg.gray1),
-  )
+  if outlined {
+    fancybox(
+      outline(indent: n => (n - 1) * 1em, title: none),
+      body-styles: (fill: palette.bg.gray0),
+      title: [*Contents*],
+      title-styles: (fill: palette.bg.gray1),
+    )
+  } else {
+    line(length: 100%, stroke: palette.bg.gray1)
+  }
 
   body
 }
