@@ -5,40 +5,39 @@
 #show: template.with(
   title: [Natural Gradient Descent],
   created: datetime(year: 2025, month: 10, day: 3),
-  updated: datetime(year: 2025, month: 10, day: 11),
+  updated: datetime(year: 2026, month: 10, day: 11),
 )
 
 #let KL = $DD_"KL"$
 #let lambda = $bold(lambda)$
 #let mu = $bold(mu)$
 #let theta = $bold(theta)$
-#let xx = $bold(x)$
 
-Natural gradient descent (NGD) @amari1998natural is a second-order optimization method for parametrized probability distributions $p(xx|theta)$:
-$ theta_(t+1) = theta_t - eta F^(-1)(theta_t) nabla J(theta_t), $
+*Natural gradient descent* (NGD) @amari1998natural is a preconditioning gradient optimization method for probabilistic models $p(x|theta)$:
+$ theta_(t+1) = theta_t - beta F^(-1)(theta_t) nabla J(theta_t), $
 where $F^(-1)(theta_t)$ is the inverse of the _Fisher information matrix_ (FIM).
 
 #definition(label: <fim>, title: [Fisher Information Matrix])[
   The Fisher information matrix $F(theta)$ for $p(x|theta)$ is defined as the variance of the _score_ function $nabla_theta log p(x|theta)$ #footnote[The expectation of the score function $EE_(p(x|theta))[nabla_theta log p(x|theta)]=0$.]:
-  $ F(theta) = EE_(p(x|theta))[(nabla_theta log p(x|theta)) (nabla_theta log p(x|theta))^top], $
+  $ F(theta) := EE_(p(x|theta))[(nabla_theta log p(x|theta)) (nabla_theta log p(x|theta))^top], $
   or equivalently the negative expected Hessian of the log likelihood
-  $ F(theta) = - EE_(p(x|theta))[nabla^2_theta log p(x|theta)]. $
+  $ F(theta) := - EE_(p(x|theta))[nabla^2_theta log p(x|theta)]. $
 ]
 
 == Kullback-Leibler Divergence
 
 Recall that #wikilink("/optimization/gradient-descent.typ") can be derived from
 $ limits(arg min)_theta space J(theta_t) + nabla J(theta_t)^top (theta-theta_t) + (2eta)^(-1) ||theta-theta_t||_2^2, $
-which penalizes large updates by measuring the (squared) Euclidean distance $||theta-theta_t||_2^2$ between parameter.
+which penalizes large updates by measuring the (squared) Euclidean distance $||theta-theta_t||_2^2$ between parameter updates.
 
-For probabilistic models, however, the parameter space is generally _not_ Euclidean. Instead, a more natural penalty would be measuring the Kullback-Leibler (KL) divergence between the induced distributions:
+For probabilistic models, however, the parameter space is generally not Euclidean. Instead, a more _natural_ penalty would be the KL divergence between the induced distributions:
 $
-  limits(arg min)_theta space J(theta_t) + nabla J(theta_t)^top (theta-theta_t) + eta^(-1) KL(p(x|theta_t) || p(x|theta)).
+  limits(arg min)_theta space J(theta_t) + nabla J(theta_t)^top (theta-theta_t) + beta^(-1) KL(p(x|theta_t) || p(x|theta)).
 $
 
-Unfortunately, $KL(p||q)$ do not have an analytical form in general. We instead consider its second-order Taylor approximation. Let $f(theta) = KL(p(x|theta_t) || p(x|theta))$ and $delta theta = theta - theta_t$, and we have
+Unfortunately, $KL(p || q)$ does not admit an analytical form in general. We instead consider its second-order Taylor approximation. Let $f(theta) = KL(p(x|theta_t) || p(x|theta))$ and $delta theta = theta - theta_t$, and we have
 $
-  f(theta) approx f(theta_t) + nabla f(theta_t)^T delta theta + 1/2 delta theta^top nabla^2 f(theta_t) delta theta.
+  f(theta) approx f(theta_t) + nabla f(theta_t)^top delta theta + 1/2 delta theta^top nabla^2 f(theta_t) delta theta.
 $
 #quote[
   1. The first term is trivially zero as #h(1fr)
@@ -60,9 +59,9 @@ Therefore, we have $KL(p(x|theta_t) || p(x|theta)) approx 1/2 delta theta^top F(
 $
   limits(arg min)_theta space J(theta_t) + nabla J(theta_t)^top delta theta + (2eta)^(-1) delta theta^top F(theta_t) delta theta,
 $
-which can be solved by $theta^* = theta_t - eta F^(-1)(theta_t) nabla J(theta_t)$.
+which can be solved by $theta^* = theta_t - beta F^(-1)(theta_t) nabla J(theta_t)$.
 
-== Efficiency and Approximations
+== Efficiency
 
 A major drawback of NGD is that computing and inverting the FIM is expensive. Therefore, efficient approximation methods or alternative routines have been of particular research interests.
 
@@ -71,7 +70,7 @@ A major drawback of NGD is that computing and inverting the FIM is expensive. Th
 Recall that FIM can be defined as the variance of the score function
 $ F(theta) = EE_(p(x|theta))[(nabla_theta log p(x|theta)) (nabla_theta log p(x|theta))^top]. $
 
-_Empirical Fisher_ approximates FIM by evaluating the expectation w.r.t. an empirical distribution $p_(cal(D))(x)$, where $cal(D)$ is a dataset:
+_Empirical Fisher_ approximates the FIM with an empirical dataset $cal(D)$:
 $ F(theta) approx 1 / (|cal(D)|) sum_(x in cal(D)) (nabla_theta log p(x|theta)) (nabla_theta log p(x|theta))^top. $
 
 === Exponential Family Distributions

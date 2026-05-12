@@ -19,12 +19,12 @@ The simplest method for sampling from univariate distributions is the _inverse t
     F_u (U) & = "Pr"{u <= U} = "Pr"{F_x (x) <= U} \
             & = "Pr"{x <= F_x^(-1)(U)} = F_x (F_x^(-1)(U)) = U.
   $
-  Note that $F_u (U)=U$ is simply the CDF of a uniform distribution on $[0,1]$. #footnote[See also the change-of-variables formula, as detailed in #wikilink("/generative-model/nf", title: [Normalizing Flow]).]
+  Note that $F_u (U)=U$ is simply the CDF of a uniform distribution on $[0,1]$. #footnote[See also the change-of-variables formula, as discussed in #wikilink("/generative-model/nf", title: [Normalizing Flow]).]
 ]
 
 Therefore, we can sample from any univariate probability density $p(x)$, of which we can evaluate the inverse CDF $F_x^(-1)$
 $
   u & ~ "Uniform"(0, 1), \
-  x & = F_x^(-1)(U) ~ p(x),
+  x & = F_x^(-1)(u) ~ p(x),
 $
 by applying the inverse of the probability integral transform.

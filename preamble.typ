@@ -94,7 +94,7 @@
 
   show cite: set text(fill: palette.fg.blue)
   show cite.where(supplement: [prose]): it => cite(it.key, form: "prose")
-  show math.equation: set block(breakable: true)
+  show link: set text(fill: palette.fg.blue)
 
   // heading
   grid(

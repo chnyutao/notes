@@ -18,18 +18,18 @@ $
     & limits(arg max)_theta sum_(xx_n) log p(xx_n|theta) \
   = & limits(arg max)_theta sum_(xx_n) log integral p(xx_n,zz_n|theta) dif zz_n,
 $
-where $p(xx|theta)$ is known as the _incomplete-data_ likelihood, and $p(xx,zz|theta)$ is known as the _complete-data_ likelihood.
+where $p(xx|theta)$ is known as the _observed-data_ likelihood, and $p(xx,zz|theta)$ is known as the _complete-data_ likelihood.
 
 == Evidence Lower Bound
 
-Unfortunately, this maximization is generally intractable, because of the $log integral p(xx,zz|theta) dif zz$ term.
+Unfortunately, maximizing $log p(xx|theta)$ is difficult in general due to the integration $integral p(xx,zz|theta) dif zz$ over $zz$.
 
 We can bypass the intractability by transforming $log p(xx|theta)$ as follows:
 $
   log p(xx|theta)
   & = EE_(q(zz))[log p(xx|theta)] \
   & = EE_(q(zz))[log (p(xx,zz|theta) \/ p(zz|xx,theta))] \
-  & = underbrace(EE_(q(zz))[log p(xx,zz|theta) / q(z)], cal(F)(q(zz), theta)) + KL(q(zz) || p(zz|xx,theta)),
+  & = underbrace(EE_(q(zz))[log p(xx,zz|theta) / q(zz)], cal(F)(q(zz), theta)) + KL(q(zz) || p(zz|xx,theta)),
 $
 where $cal(F)(q(zz), theta)$ is known as the _evidence lower bound_ (ELBO). We have
 $ cal(F)(q(zz), theta) <= log p(xx|theta) $
@@ -57,17 +57,17 @@ $
   $ tilde(cal(F))(q(zz),theta) = cal(F)(q(zz),theta) + log p(theta) <= log p(x|theta)p(theta). $
 ]
 
-== Extensions and Connections
+== Extensions
 
 === Variational EM
 
 One of the basic assumption we have made in EM is that we can easily evaluate $q_t (zz)=p(zz|xx,theta_t)$ in the E-step.
 
-However, evaluating the posterior $p(zz|xx,theta_t)$ itself could be intractable, especially if $zz$ is a continuous r.v. We can instead use _variational inference_ (VI) to pick $q_t$ such that
+However, evaluating the posterior $p(zz|xx,theta_t)$ itself could be intractable, especially when $zz$ is continuous. We can instead pick $q_t$ using _variational inference_ (VI) such that
 $ q_t (zz) = limits(arg max)_(q in cal(Q)) space KL(q(zz) || p(zz|xx,theta_t)), $
-where $Q$ is the variational family. Intuitively, we pick a distribution $q_t (zz) in cal(Q)$ that can best approximate the exact posterior $p(zz|xx,theta_t)$.
+where $cal(Q)$ is the variational family. Intuitively, we pick a distribution $q_t (zz) in cal(Q)$ that can best approximate the exact posterior $p(zz|xx,theta_t)$.
 
-This approach, unfortunately, does not guarantee monotonic improvement of $log p(xx|theta)$ due to approximation errors. Only when the variational family $Q$ is sufficiently versatile such that $p(zz|xx,theta) in cal(Q)$ can we (in theory) recover the behaviors of regular EM.
+This approach, unfortunately, does not guarantee monotonic improvement of $log p(xx|theta)$ due to approximation error. Only if $p(zz|xx,theta_t) in cal(Q)$ can we (in theory) recover the behaviors of regular EM.
 
 === Stochastic Gradient EM
 
@@ -82,7 +82,7 @@ $ theta_(t+1) = theta_t + eta nabla_theta cal(F)(q_t (zz), theta_t). $
   The varational auto-encoders (VAEs) @kingma2013auto can be interpreted as an instance of variational stochastic gradient EM.
 ]
 
-However, EM becomes less appealling when there is no close form for the M-step, as one might just as well directly optimize $log p(xx|theta)$ using gradient-based methods. Particularly, one can show that
+However, EM becomes less appealling when there is no close form for the M-step, as one might just directly optimize $log p(xx|theta)$ with gradient ascent. Particularly, one can show that
 $ nabla_theta log p(xx|theta_t) = nabla_theta cal(F)(q_t (zz), theta_t). $
 
 #references()

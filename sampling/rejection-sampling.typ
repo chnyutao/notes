@@ -15,7 +15,7 @@ with possibly unknown normalizing constants $Z_p = integral tp(xx) dif xx$.
 
 == Rejection Sampling
 
-The core idea is to use a proposal distribution $q(xx)$ such that $C q(xx)>=tp(xx)$ for some constant $C$, that is, $C q(xx)$ is an upper bound of $tp(xx)$.
+The core idea is to use a proposal distribution $q(xx)$ such that $C q(xx)>=tp(xx)$ for some constant $C$. That is, $C q(xx)$ is an upper bound of $tp(xx)$.
 
 #quote[
   The proposal distribution $q(xx)$ generally should be easy to sample from (e.g. Gaussians) compared to the target distribution $p(xx)$.
@@ -47,4 +47,4 @@ The resulting upper bound $q(xx)$ will be piecewise exponential as the log of th
 
 #rule()
 
-Rejection sampling does not scale to high dimensional space very well, as _(a)_ it is challenging to come up with a tight bound, and _(b)_ rejection rates are almost always $approx 1$ due to the curse of dimensionality.
+Rejection sampling does not scale well to high dimensional space, as _(a)_ it is challenging to come up with a tight upper bound, and _(b)_ rejection rates are almost always $approx 1$ due to the curse of dimensionality.
